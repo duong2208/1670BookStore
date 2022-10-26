@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace _1670BookStore.Models
 {
-    public class Category
+    public class Request
     {
         public int Id { get; set; }
         [MinLength(4, ErrorMessage = "Category ID must be at least 4 characters.")]
@@ -15,8 +14,8 @@ namespace _1670BookStore.Models
         public string CatName { get; set; }
         [MinLength(5, ErrorMessage = "Name length must be at least 5 character.")]
         public string CatDescription { get; set; }
+        
         public int Status { get; set; }
         public ICollection<Book> Books { get; set; }
-
     }
 }

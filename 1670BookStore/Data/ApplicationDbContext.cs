@@ -17,6 +17,7 @@ namespace _1670BookStore.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<StoreOwner> StoreOwner { get; set; }
+        public DbSet<Request> Requests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,7 +52,8 @@ namespace _1670BookStore.Data
                     Id = 1,
                     CatId = "CAT1",
                     CatName = "Kids",
-                    CatDescription = "This book type will talk about the thing around kid"
+                    CatDescription = "This book type will talk about the thing around kid",
+                    Status = 2
                 }
                 );
         }

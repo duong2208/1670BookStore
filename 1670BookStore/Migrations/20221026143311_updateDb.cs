@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace _1670BookStore.Migrations
 {
-    public partial class EditValidation : Migration
+    public partial class updateDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,7 +54,8 @@ namespace _1670BookStore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CatId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CatName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    CatDescription = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CatDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,6 +81,22 @@ namespace _1670BookStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Requests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CatId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CatName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    CatDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Requests", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,7 +236,8 @@ namespace _1670BookStore.Migrations
                     BookDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BookImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BookAuthor = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    RequestId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -230,17 +248,23 @@ namespace _1670BookStore.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Books_Requests_RequestId",
+                        column: x => x.RequestId,
+                        principalTable: "Requests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "Id", "CatDescription", "CatId", "CatName" },
-                values: new object[] { 1, "This book type will talk about the thing around kid", "CAT1", "Kids" });
+                columns: new[] { "Id", "CatDescription", "CatId", "CatName", "Status" },
+                values: new object[] { 1, "This book type will talk about the thing around kid", "CAT1", "Kids", 2 });
 
             migrationBuilder.InsertData(
                 table: "Books",
-                columns: new[] { "Id", "BookAuthor", "BookDescription", "BookId", "BookImage", "BookPrice", "BookQuantity", "BookTitle", "CategoryId" },
-                values: new object[] { 1, "William", "Th frog is coming, all people worry about it.", "B01", "https://i.pinimg.com/originals/5f/e7/84/5fe784a563c1b5385fda215faa0edc27.jpg", 6.5, 12, "The frog is coming", 1 });
+                columns: new[] { "Id", "BookAuthor", "BookDescription", "BookId", "BookImage", "BookPrice", "BookQuantity", "BookTitle", "CategoryId", "RequestId" },
+                values: new object[] { 1, "William", "Th frog is coming, all people worry about it.", "B01", "https://i.pinimg.com/originals/5f/e7/84/5fe784a563c1b5385fda215faa0edc27.jpg", 6.5, 12, "The frog is coming", 1, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -285,6 +309,11 @@ namespace _1670BookStore.Migrations
                 name: "IX_Books_CategoryId",
                 table: "Books",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_RequestId",
+                table: "Books",
+                column: "RequestId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -321,6 +350,9 @@ namespace _1670BookStore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Requests");
         }
     }
 }

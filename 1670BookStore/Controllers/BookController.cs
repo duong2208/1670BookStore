@@ -14,6 +14,7 @@ namespace _1670BookStore.Controllers
         }
         public IActionResult Index()
         {
+            var categories = context.Categories.ToList();
             return View(context.Books.ToList());
         }
         public IActionResult Delete(int? id)

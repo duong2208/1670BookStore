@@ -10,8 +10,8 @@ using _1670BookStore.Data;
 namespace _1670BookStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221022040548_EditValidation")]
-    partial class EditValidation
+    [Migration("20221026143311_updateDb")]
+    partial class updateDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -255,9 +255,14 @@ namespace _1670BookStore.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RequestId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("RequestId");
 
                     b.ToTable("Books");
 
@@ -293,6 +298,9 @@ namespace _1670BookStore.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
@@ -303,7 +311,8 @@ namespace _1670BookStore.Migrations
                             Id = 1,
                             CatDescription = "This book type will talk about the thing around kid",
                             CatId = "CAT1",
-                            CatName = "Kids"
+                            CatName = "Kids",
+                            Status = 2
                         });
                 });
 
@@ -351,6 +360,31 @@ namespace _1670BookStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("_1670BookStore.Models.Request", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CatDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CatId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CatName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("_1670BookStore.Models.StoreOwner", b =>
@@ -448,10 +482,19 @@ namespace _1670BookStore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("_1670BookStore.Models.Request", null)
+                        .WithMany("Books")
+                        .HasForeignKey("RequestId");
+
                     b.Navigation("Category");
                 });
 
             modelBuilder.Entity("_1670BookStore.Models.Category", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("_1670BookStore.Models.Request", b =>
                 {
                     b.Navigation("Books");
                 });

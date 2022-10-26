@@ -22,19 +22,60 @@ namespace _1670BookStore.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Add(Category category)
+        public IActionResult MakeRequest(Category category, Request request)
         {
             if (ModelState.IsValid)
             {
-                context.Categories.Add(category);
+                var cat = new Category();
+                cat.CatId = request.CatId;
+                cat.CatName = request.CatName;
+                cat.CatDescription = request.CatDescription;
+                cat.Status = request.Status;
+                context.Categories.Add(cat);
+                context.Requests.Add(request);
                 context.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(category);
+                return View("Add", request);
             }
 
+        }
+        public IActionResult IndexRequest()
+        {
+            return View(context.Requests.ToList());
+        }
+
+        public IActionResult Accept(int id)
+        {
+            var request = context.Requests.Find(id);
+            foreach(var cat in context.Categories)
+            {
+                if (cat.CatId.Equals(request.CatId))
+                {
+                    cat.Status = 2;
+                    context.Categories.Update(cat);
+                }
+            }
+            context.Requests.Remove(request);
+            context.SaveChanges();
+            return RedirectToAction("IndexRequest");
+        }
+        public IActionResult Reject(int id)
+        {
+            var request = context.Requests.Find(id);
+            context.Requests.Remove(request);
+            foreach (var cat in context.Categories)
+            {
+                if (cat.CatId.Equals(request.CatId))
+                {
+                    cat.Status = 3;
+                    context.Categories.Update(cat);
+                }
+            }
+            context.SaveChanges();
+            return RedirectToAction("IndexRequest");
         }
         [HttpGet]
         public IActionResult Edit(int id)

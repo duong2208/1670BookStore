@@ -1,4 +1,4 @@
-﻿@model _1670BookStore.Models.Category
+﻿@model _1670BookStore.Models.Request
 
 <div class="container">
     <div class="p-2 pt-md-5 pb-md-3 mx-auto">
@@ -6,7 +6,7 @@
     </div>
 
 
-    <form asp-controller="Category" asp-action="Add" method="post">
+    <form asp-controller="Category" asp-action="MakeRequest" method="post">
         <div class="form-group">
             <label class="font-weight-bold">ID</label>
             <input class="form-control" asp-for="@Model.CatId">
@@ -25,7 +25,7 @@
             <span class="text-danger" asp-validation-for="@Model.CatDescription"></span>
         </div>
 
-        
-        <button type="submit" class="btn btn-dark">Submit</button>
+        <input hidden class="form-control" name="Status" value="1">
+        <button type="submit" class="btn btn-dark"><i class="fa-solid fa-check"></i> Add</button>
     </form>
 </div>
